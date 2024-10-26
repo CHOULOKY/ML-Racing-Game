@@ -1,0 +1,19 @@
+10 Islands + 175 assets
+One texture (2048/1024/512/256/128px) and one material are used for the whole set
+
+335 k triangles full set (exteriors)
+
+Exteriors props:
+
+Buildings (houses, mills, barns, warehouses, platforms, well)
+Landscape/Vegetation (trees, stump, lake, paths, stones, bushes, gardens, plants, flowers, carrots, beets, apples, corns, turnip, pumpkin, tomatos, wheat ear)
+Animals (cows, pigs, chikens, bees)
+Props (tractor, tractor plow, trailer, carts, buckes, boxes, benches, fences, barrels, paths, sighns, shovel, haystacks, bridge, log, axe, lamps, ladder, waterings can and much more)
+
+The pack allows you to build any Farm exterior project to your liking. 10 islands included!
+
+Pack is Real-world-size, but you can scale the objects/models to the size you need.
+
+Feel free to download it and leave your reviews, comments and likes. This will help us create more products for you :)
+
+If you have any questions feel free to contact us by email: mnostva@gmail.com
