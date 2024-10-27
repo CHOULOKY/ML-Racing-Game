@@ -11,15 +11,16 @@ GameObject:
   - component: {fileID: 5691500648231853026}
   - component: {fileID: 7971271745048906852}
   - component: {fileID: 4783351228976807115}
+  - component: {fileID: 6113232959405151318}
   - component: {fileID: 9059070403524553150}
   - component: {fileID: 6587322302090711807}
   - component: {fileID: 4614024585408922436}
   - component: {fileID: 226687682630063694}
   - component: {fileID: 969756321586434960}
   - component: {fileID: 928434736269863234}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Black Cow Big
-  m_TagString: Untagged
+  m_TagString: Animal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,7 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 3
+    VectorObservationSize: 8
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
@@ -64,7 +65,7 @@ MonoBehaviour:
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
   m_BehaviorType: 0
-  m_BehaviorName: AnimalAgent
+  m_BehaviorName: RaceToGoal
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
@@ -85,9 +86,24 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
-  moveSpeed: 0
-  turnSpeed: 0
+  MaxStep: 1200
+  moveSpeed: 20
+  turnSpeed: 200
+--- !u!114 &6113232959405151318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8088274688599383945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DecisionPeriod: 1
+  DecisionStep: 0
+  TakeActionsBetweenDecisions: 1
 --- !u!114 &9059070403524553150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,21 +117,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: RayPerceptionSensor
-  m_DetectableTags: []
+  m_DetectableTags:
+  - Wall
+  - Checkpoint
   m_RaysPerDirection: 3
   m_MaxRayDegrees: 70
   m_SphereCastRadius: 0.5
   m_RayLength: 20
   m_RayLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 4294967232
   m_ObservationStacks: 1
   m_AlternatingRayOrder: 1
   m_UseBatchedRaycasts: 0
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
-  m_StartVerticalOffset: 0
-  m_EndVerticalOffset: 0
+  m_StartVerticalOffset: 0.5
+  m_EndVerticalOffset: 0.5
 --- !u!33 &6587322302090711807
 MeshFilter:
   m_ObjectHideFlags: 0
