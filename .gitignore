@@ -73,3 +73,7 @@ crashlytics-build.properties
 
 # Ignore virtual environment folder
 venv/
+
+# Ignore other folders
+Builds/
+Recordings/

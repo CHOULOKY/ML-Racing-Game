@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3129289929186764210}
   - component: {fileID: 7466294528924709510}
   - component: {fileID: -767388037817394424}
+  - component: {fileID: 367349628325123474}
   - component: {fileID: 8274221489442765540}
   - component: {fileID: 6902478930346916282}
   - component: {fileID: 5028342751217722832}
@@ -53,7 +54,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 8
+    VectorObservationSize: 1
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
@@ -88,7 +89,7 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 1200
   moveSpeed: 20
-  turnSpeed: 200
+  turnSpeed: 4
 --- !u!114 &7466294528924709510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,6 +135,22 @@ MonoBehaviour:
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
   m_StartVerticalOffset: 0.5
   m_EndVerticalOffset: 0.5
+--- !u!114 &367349628325123474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 936597455007416347}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2902496c0120472b90269f94a0aec7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Record: 1
+  NumStepsToRecord: 0
+  DemonstrationName: AnimalAgentDemo
+  DemonstrationDirectory: demos
 --- !u!33 &8274221489442765540
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -255,6 +272,6 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 2
   m_Constraints: 80
   m_CollisionDetection: 1

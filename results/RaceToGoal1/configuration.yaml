@@ -3,8 +3,8 @@ behaviors:
   RaceToGoal:
     trainer_type: ppo
     hyperparameters:
-      batch_size: 10
-      buffer_size: 100
+      batch_size: 256
+      buffer_size: 10240
       learning_rate: 0.0003
       beta: 0.0005
       epsilon: 0.2
@@ -26,6 +26,17 @@ behaviors:
     reward_signals:
       extrinsic:
         gamma: 0.99
+        strength: 0.1
+        network_settings:
+          normalize: false
+          hidden_units: 128
+          num_layers: 2
+          vis_encode_type: simple
+          memory: null
+          goal_conditioning_type: hyper
+          deterministic: false
+      gail:
+        gamma: 0.99
         strength: 1.0
         network_settings:
           normalize: false
@@ -35,6 +46,11 @@ behaviors:
           memory: null
           goal_conditioning_type: hyper
           deterministic: false
+        learning_rate: 0.0003
+        encoding_size: null
+        use_actions: false
+        use_vail: false
+        demo_path: demos/AnimalAgentDemo1.demo
     init_path: null
     keep_checkpoints: 5
     even_checkpoints: false
@@ -43,7 +59,13 @@ behaviors:
     summary_freq: 10000
     threaded: false
     self_play: null
-    behavioral_cloning: null
+    behavioral_cloning:
+      demo_path: demos/AnimalAgentDemo1.demo
+      steps: 0
+      strength: 1.0
+      samples_per_update: 0
+      num_epoch: null
+      batch_size: null
 env_settings:
   env_path: null
   env_args: null
@@ -66,11 +88,11 @@ engine_settings:
   no_graphics_monitor: false
 environment_parameters: null
 checkpoint_settings:
-  run_id: RaceToGoal
+  run_id: RaceToGoal13
   initialize_from: null
   load_model: false
   resume: false
-  force: false
+  force: true
   train_model: false
   inference: false
   results_dir: results
