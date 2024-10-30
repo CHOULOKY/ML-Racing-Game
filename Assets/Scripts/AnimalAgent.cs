@@ -13,6 +13,7 @@ public class AnimalAgent : Agent
 
     private Vector3 startPosition;
     private Quaternion startRotation;
+    public Vector3[] startPositions;
 
     public float moveSpeed;
     public float turnSpeed;
@@ -38,8 +39,15 @@ public class AnimalAgent : Agent
         rigid.velocity = Vector3.zero;
         rigid.angularVelocity = Vector3.zero;
 
-        int randomPosition = UnityEngine.Random.Range(0, 4);
-        rigid.position = new Vector3(startPosition.x, startPosition.y, -4 + randomPosition * 2.3f);
+        int randomPosition;
+        if (startPositions.Length > 0) {
+            randomPosition = UnityEngine.Random.Range(0, startPositions.Length);
+            rigid.position = startPositions[randomPosition];
+        }
+        else {
+            randomPosition = UnityEngine.Random.Range(0, 4);
+            rigid.position = new Vector3(startPosition.x, startPosition.y, -4 + randomPosition * 2.3f);
+        }
         // rigid.position = startPosition;
         rigid.rotation = startRotation;
         
