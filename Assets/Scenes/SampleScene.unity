@@ -17610,6 +17610,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Black Cow (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 936597455007416347, guid: 7a54bc8dafff9b046aeefbe3fba77f3e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1680067548124080736, guid: 7a54bc8dafff9b046aeefbe3fba77f3e, type: 3}
       propertyPath: m_BehaviorType
       value: 0
