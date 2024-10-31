@@ -14,6 +14,7 @@ public class AnimalAgent : Agent
     private Vector3 startPosition;
     private Quaternion startRotation;
     public Transform[] startTransforms;
+    [Tooltip("Inference Only")] public bool useModel;
 
     public float moveSpeed;
     public float turnSpeed;
@@ -39,18 +40,25 @@ public class AnimalAgent : Agent
         rigid.velocity = Vector3.zero;
         rigid.angularVelocity = Vector3.zero;
 
-        int randomPosition;
-        if (startTransforms.Length > 0) {
-            // Real course
-            randomPosition = UnityEngine.Random.Range(0, startTransforms.Length);
-            rigid.position = startTransforms[randomPosition].position;
-            rigid.rotation = startTransforms[randomPosition].rotation;
+        if (useModel) {
+            // Use a completed model
+            rigid.position = startPosition;
+            rigid.rotation = startRotation;
         }
         else {
-            // Left or Right course
-            randomPosition = UnityEngine.Random.Range(0, 4);
-            rigid.position = new Vector3(startPosition.x, startPosition.y, -4 + randomPosition * 2.3f);
-            rigid.rotation = startRotation;
+            int randomPosition;
+            if (startTransforms.Length > 0) {
+                // Real course
+                randomPosition = UnityEngine.Random.Range(0, startTransforms.Length);
+                rigid.position = startTransforms[randomPosition].position;
+                rigid.rotation = startTransforms[randomPosition].rotation;
+            }
+            else {
+                // Left or Right course
+                randomPosition = UnityEngine.Random.Range(0, 4);
+                rigid.position = new Vector3(startPosition.x, startPosition.y, -4 + randomPosition * 2.3f);
+                rigid.rotation = startRotation;
+            }
         }
         
         nextCheckpoint = 0;

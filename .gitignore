@@ -75,5 +75,7 @@ crashlytics-build.properties
 venv/
 
 # Ignore other folders
-Builds/
+# Builds/
 Recordings/
+# Assets/Imports
+# Assets/Prefabs
