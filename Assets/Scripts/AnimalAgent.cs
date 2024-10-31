@@ -13,7 +13,7 @@ public class AnimalAgent : Agent
 
     private Vector3 startPosition;
     private Quaternion startRotation;
-    public Vector3[] startPositions;
+    public Transform[] startTransforms;
 
     public float moveSpeed;
     public float turnSpeed;
@@ -40,16 +40,18 @@ public class AnimalAgent : Agent
         rigid.angularVelocity = Vector3.zero;
 
         int randomPosition;
-        if (startPositions.Length > 0) {
-            randomPosition = UnityEngine.Random.Range(0, startPositions.Length);
-            rigid.position = startPositions[randomPosition];
+        if (startTransforms.Length > 0) {
+            // Real course
+            randomPosition = UnityEngine.Random.Range(0, startTransforms.Length);
+            rigid.position = startTransforms[randomPosition].position;
+            rigid.rotation = startTransforms[randomPosition].rotation;
         }
         else {
+            // Left or Right course
             randomPosition = UnityEngine.Random.Range(0, 4);
             rigid.position = new Vector3(startPosition.x, startPosition.y, -4 + randomPosition * 2.3f);
+            rigid.rotation = startRotation;
         }
-        // rigid.position = startPosition;
-        rigid.rotation = startRotation;
         
         nextCheckpoint = 0;
     }
@@ -92,8 +94,9 @@ public class AnimalAgent : Agent
 
 
         // 시간당 페널티
-        AddReward(MaxStep != 0 ? -1f / MaxStep : 0);
-        
+        // AddReward(MaxStep != 0 ? -1f / MaxStep : 0);
+        AddReward(-1f / 1000);
+
         // 속도 비례 보상
         // float speedReward = Mathf.Clamp(Mathf.Sqrt(rigid.velocity.magnitude) * 0.01f, 0, Mathf.Abs(stepPenalty / 2));
         // AddReward(speedReward);
