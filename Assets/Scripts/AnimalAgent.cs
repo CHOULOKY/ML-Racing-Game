@@ -6,16 +6,23 @@ using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using System.Net;
 using UnityEngine.UIElements;
+using System.Linq;
 
 public class AnimalAgent : Agent
 {
+    public int animalNumber;
+
     private Rigidbody rigid;
 
     private Vector3 startPosition;
     private Quaternion startRotation;
     public Transform[] startTransforms;
+    private Vector3[] startPositions;
+    private Quaternion[] startRotations;
     [Tooltip("Inference Only")] public bool useModel;
 
+    private int moveZ = 0;
+    private int turnX = 0;
     public float moveSpeed;
     public float turnSpeed;
 
@@ -31,6 +38,8 @@ public class AnimalAgent : Agent
 
         startPosition = rigid.position;
         startRotation = rigid.rotation;
+        startPositions = startTransforms.Select(t => t.position).ToArray();
+        startRotations = startTransforms.Select(t => t.rotation).ToArray();
 
         checkpoints = GameManager.Instance.checkpoints.checkpoints;
     }
@@ -47,11 +56,11 @@ public class AnimalAgent : Agent
         }
         else {
             int randomPosition;
-            if (startTransforms.Length > 0) {
+            if (startPositions.Length > 0) {
                 // Real course
-                randomPosition = UnityEngine.Random.Range(0, startTransforms.Length);
-                rigid.position = startTransforms[randomPosition].position;
-                rigid.rotation = startTransforms[randomPosition].rotation;
+                randomPosition = UnityEngine.Random.Range(0, startPositions.Length);
+                rigid.position = startPositions[randomPosition];
+                rigid.rotation = startRotations[randomPosition];
             }
             else {
                 // Left or Right course
@@ -91,14 +100,8 @@ public class AnimalAgent : Agent
     
     public override void OnActionReceived(ActionBuffers actions)
     {
-        float moveZ = actions.DiscreteActions[0]; // 0: 정지, 1: 앞, 2: 뒤
-        float turnX = actions.DiscreteActions[1]; // 0: 정지, 1: 오른, 2: 왼
-
-        Vector3 moveDirection = transform.forward * (moveZ == 2 ? -1 : moveZ) * moveSpeed;
-        rigid.velocity = moveDirection;
-
-        float turnDirection = (turnX == 2 ? -1 : turnX) * turnSpeed;
-        rigid.angularVelocity = new Vector3(0f, turnDirection, 0f);
+        moveZ = actions.DiscreteActions[0]; // 0: 정지, 1: 앞, 2: 뒤
+        turnX = actions.DiscreteActions[1]; // 0: 정지, 1: 오른, 2: 왼
 
 
         // 시간당 페널티
@@ -135,6 +138,16 @@ public class AnimalAgent : Agent
         discreteSegment[1] = (int)turnX;
     }
 
+    private void FixedUpdate()
+    {
+        Vector3 moveDirection = transform.forward * (moveZ == 2 ? -1 : moveZ) * moveSpeed;
+        rigid.velocity = moveDirection;
+
+        float turnDirection = (turnX == 2 ? -1 : turnX) * turnSpeed;
+        rigid.angularVelocity = new Vector3(0f, turnDirection, 0f);
+    }
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Checkpoint")) {
@@ -145,13 +158,18 @@ public class AnimalAgent : Agent
                 // Debug.Log($"Current Reward: {GetCumulativeReward()} // {nextCheckpoint}");
 
                 if (nextCheckpoint >= checkpoints.Count) {
-                    // nextCheckpoint = -1;
                     AddReward(20f); // 완주 보상
-                    EndEpisode();
+                    if (GameManager.Instance.mainCamera.isTraining) {
+                        EndEpisode();
+                    }
+                    else {
+                        nextCheckpoint = 0;
+                        SetReward(0);
+                    }
                 }
             }
             else {
-                // AddReward(-1f);
+                AddReward(-1f);
             }
         }
     }
@@ -163,6 +181,9 @@ public class AnimalAgent : Agent
             // OnEpisodeBegin();
             // EndEpisode();
         }
+        else if (collision.gameObject.CompareTag("Animal")) {
+            AddReward(-0.05f);
+        }
     }
 
     private void OnCollisionStay(Collision collision)
@@ -172,7 +193,9 @@ public class AnimalAgent : Agent
 
             if (GetCumulativeReward() < -20f) {
                 AddReward(-10f);
-                EndEpisode();
+                if (GameManager.Instance.mainCamera.isTraining) {
+                    EndEpisode();
+                }
             }
         }
     }
@@ -184,3 +207,6 @@ public class AnimalAgent : Agent
         }
     }
 }
+
+
+// 출발 라인 생성 후 재학습
