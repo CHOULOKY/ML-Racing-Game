@@ -5,7 +5,6 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
-
     public static GameManager Instance
     {
         get {
@@ -14,12 +13,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    public MainCamera mainCamera;
     public Checkpoints checkpoints;
 
     private void Awake()
     {
         instance = this;
 
+        mainCamera = mainCamera != null ? mainCamera : Camera.main.GetComponent<MainCamera>();
         checkpoints = checkpoints != null ? checkpoints : FindAnyObjectByType<Checkpoints>();
     }
 }
