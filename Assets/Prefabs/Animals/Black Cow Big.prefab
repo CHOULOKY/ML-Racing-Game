@@ -62,7 +62,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: a8c26865864f19048a0ef45e64649be0, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 0e8b324c076249f40a05061a967053d4, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 2
   m_BehaviorName: RaceToGoal
@@ -92,8 +92,6 @@ MonoBehaviour:
   useModel: 1
   moveSpeed: 20
   turnSpeed: 4
-  maxSpeed: 0
-  maxTurnSpeed: 0
 --- !u!114 &6113232959405151318
 MonoBehaviour:
   m_ObjectHideFlags: 0

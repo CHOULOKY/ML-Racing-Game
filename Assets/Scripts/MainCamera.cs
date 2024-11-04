@@ -10,8 +10,8 @@ public class MainCamera : MonoBehaviour
     public bool isTraining = false;
     public bool isObserver = true;
 
-    public AnimalAgent[] animals;
-    public int curAnimalIndex;
+    private AnimalAgent[] animals;
+    private int curAnimalIndex;
 
     private Transform targetTransform;
     public Vector3 offsetPosition;
@@ -26,6 +26,7 @@ public class MainCamera : MonoBehaviour
     {
         animals = new AnimalAgent[4];
         foreach (AnimalAgent agent in FindObjectsByType<AnimalAgent>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)) {
+            if (animals[agent.animalNumber] != null) continue;
             animals[agent.animalNumber] = agent;
         }
     }
@@ -40,7 +41,9 @@ public class MainCamera : MonoBehaviour
     private void Update()
     {
         if (isTraining) {
-            courseCameras[curCameraIndex].SetActive(true);
+            if (!courseCameras[curCameraIndex].activeSelf) {
+                courseCameras[curCameraIndex].SetActive(true);
+            }
             return;
         }
 
@@ -70,7 +73,9 @@ public class MainCamera : MonoBehaviour
             }
         }
         else {
-            courseCameras[curCameraIndex].SetActive(false);
+            if (courseCameras[curCameraIndex].activeSelf) {
+                courseCameras[curCameraIndex].SetActive(false);
+            }
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
                 animals[curAnimalIndex].gameObject.GetComponent<BehaviorParameters>().BehaviorType = BehaviorType.InferenceOnly;
                 curAnimalIndex = 0;
@@ -87,7 +92,9 @@ public class MainCamera : MonoBehaviour
                 animals[curAnimalIndex].gameObject.GetComponent<BehaviorParameters>().BehaviorType = BehaviorType.InferenceOnly;
                 curAnimalIndex = 3;
             }
-            animals[curAnimalIndex].gameObject.GetComponent<BehaviorParameters>().BehaviorType = BehaviorType.HeuristicOnly;
+            if (animals[curAnimalIndex].gameObject.GetComponent<BehaviorParameters>().BehaviorType == BehaviorType.InferenceOnly) {
+                animals[curAnimalIndex].gameObject.GetComponent<BehaviorParameters>().BehaviorType = BehaviorType.HeuristicOnly;
+            }
         }
     }
 
@@ -99,7 +106,7 @@ public class MainCamera : MonoBehaviour
 
         Vector3 targetPosition = targetTransform.position - targetTransform.forward * targetDistance + offsetPosition;
         transform.position = Vector3.Lerp(transform.position, targetPosition, damping * Time.deltaTime);
-
+        
         transform.LookAt(targetTransform.position + Vector3.up * 1.5f);
     }
 }

@@ -10,7 +10,7 @@ using System.Linq;
 
 public class AnimalAgent : Agent
 {
-    public int animalNumber;
+    [Tooltip("Start zero")] public int animalNumber;
 
     private Rigidbody rigid;
 
@@ -207,6 +207,3 @@ public class AnimalAgent : Agent
         }
     }
 }
-
-
-// 출발 라인 생성 후 재학습
