@@ -89,7 +89,11 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   animalNumber: 0
-  startTransforms: []
+  startTransforms:
+  - {fileID: 3249177923870402924}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   useModel: 1
   moveSpeed: 20
   turnSpeed: 4
