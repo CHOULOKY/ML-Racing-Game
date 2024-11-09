@@ -7,6 +7,7 @@ using Unity.MLAgents.Sensors;
 using System.Net;
 using UnityEngine.UIElements;
 using System.Linq;
+using Unity.MLAgents.Policies;
 
 public class AnimalAgent : Agent
 {
@@ -16,10 +17,16 @@ public class AnimalAgent : Agent
 
     private Vector3 startPosition;
     private Quaternion startRotation;
+
     public Transform[] startTransforms;
     private Vector3[] startPositions;
     private Quaternion[] startRotations;
-    [Tooltip("Inference Only")] public bool useModel;
+    // [Tooltip("Inference Only")] public bool useModel;
+
+    public GameObject startCheckpoint;
+    private int startCheckpointIndex;
+    public GameObject goalCheckpoint;
+    private int goalCheckpointIndex;
 
     private int moveZ = 0;
     private int turnX = 0;
@@ -28,9 +35,13 @@ public class AnimalAgent : Agent
 
     private List<GameObject> checkpoints;
     private int nextCheckpoint = 0;
+    private float checkpointTime = 0;
+    [SerializeField] private float maxCheckpointTime;
 
-    private Vector3 checkpointForward;
     private float directionDot;
+
+    private bool IsTrainingOrHeuristicOnly => 
+        GameManager.Instance.mainCamera.isTraining || GetComponent<BehaviorParameters>().BehaviorType == BehaviorType.HeuristicOnly;
 
     private void Start()
     {
@@ -42,6 +53,9 @@ public class AnimalAgent : Agent
         startRotations = startTransforms.Select(t => t.rotation).ToArray();
 
         checkpoints = GameManager.Instance.checkpoints.checkpoints;
+
+        startCheckpointIndex = checkpoints.IndexOf(startCheckpoint);
+        goalCheckpointIndex = checkpoints.IndexOf(goalCheckpoint);
     }
 
     public override void OnEpisodeBegin()
@@ -49,7 +63,7 @@ public class AnimalAgent : Agent
         rigid.velocity = Vector3.zero;
         rigid.angularVelocity = Vector3.zero;
 
-        if (useModel) {
+        if (!IsTrainingOrHeuristicOnly) {
             // Use a completed model
             rigid.position = startPosition;
             rigid.rotation = startRotation;
@@ -70,7 +84,8 @@ public class AnimalAgent : Agent
             }
         }
         
-        nextCheckpoint = 0;
+        nextCheckpoint = startCheckpointIndex;
+        checkpointTime = 0;
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -82,15 +97,14 @@ public class AnimalAgent : Agent
         // sensor.AddObservation(rigid.angularVelocity);
 
         // 체크포인트 방향 일치도
-        checkpointForward = nextCheckpoint < checkpoints.Count ?
-            checkpoints[nextCheckpoint].transform.forward : Vector3.zero;
+        Vector3 checkpointForward = checkpoints[nextCheckpoint].transform.forward;
         directionDot = Vector3.Dot(checkpointForward, transform.forward);
-        sensor.AddObservation(checkpointForward != Vector3.zero ? directionDot : 1);
+        sensor.AddObservation(directionDot);
 
         // 체크포인트와의 거리
-        // float distanceToCheckpoint = Vector3.Distance(transform.position, GameManager.Instance.checkpoints.checkpoints[nextCheckpoint].transform.position);
-        // sensor.AddObservation(distanceToCheckpoint);
-
+        float distanceToCheckpoint = Vector3.Distance(transform.position, checkpoints[nextCheckpoint].transform.position);
+        sensor.AddObservation(distanceToCheckpoint);
+        
         // 체크포인트로의 좌우 방향
         // Vector3 directionToCheckpoint = checkpoints[nextCheckpoint].transform.position - transform.position;
         // directionToCheckpoint.y = 0; // Y축을 기준으로 회전하도록 Y 좌표는 무시
@@ -102,6 +116,15 @@ public class AnimalAgent : Agent
     {
         moveZ = actions.DiscreteActions[0]; // 0: 정지, 1: 앞, 2: 뒤
         turnX = actions.DiscreteActions[1]; // 0: 정지, 1: 오른, 2: 왼
+
+        // 다음 체크포인트까지 제한시간 내에 다다르지 못하면 페널티와 에피소드 종료
+        checkpointTime += Time.deltaTime;
+        if (checkpointTime > maxCheckpointTime && IsTrainingOrHeuristicOnly) {
+            // Debug.Log("제한시간");
+            checkpointTime = 0;
+            AddReward(-10f);
+            EndEpisode();
+        }
 
 
         // 시간당 페널티
@@ -120,9 +143,6 @@ public class AnimalAgent : Agent
         // 체크포인트와의 거리 보상
         // float distanceToCheckpoint = Vector3.Distance(transform.position, checkpoints[nextCheckpoint].transform.position);
         // AddReward(-distanceToCheckpoint * 0.0001f);
-
-        // 현재 누적 보상 출력
-        // Debug.Log($"Current Reward: {GetCumulativeReward()} // {nextCheckpoint}");
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -145,55 +165,68 @@ public class AnimalAgent : Agent
 
         float turnDirection = (turnX == 2 ? -1 : turnX) * turnSpeed;
         rigid.angularVelocity = new Vector3(0f, turnDirection, 0f);
+
+        // 현재 누적 보상 출력
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            Debug.Log($"Current Reward: {GetCumulativeReward()} // {nextCheckpoint}");
+        }
     }
 
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Checkpoint")) {
-            if (nextCheckpoint == checkpoints.IndexOf(other.gameObject)) {
-                AddReward(2f); // 체크포인트 보상
-                nextCheckpoint++;
+        if (!other.gameObject.CompareTag("Checkpoint")) return;
 
-                // Debug.Log($"Current Reward: {GetCumulativeReward()} // {nextCheckpoint}");
+        int checkpointIndex = checkpoints.IndexOf(other.gameObject);
+        if (checkpointIndex == nextCheckpoint) {
+            AddReward(2f); // 올바른 체크포인트 도달 시 보상
+            checkpointTime = 0; // 체크포인트 제한시간 초기화
+            // Debug.Log($"Current Reward: {GetCumulativeReward()} // {nextCheckpoint}");
 
-                if (nextCheckpoint >= checkpoints.Count) {
-                    AddReward(20f); // 완주 보상
-                    if (GameManager.Instance.mainCamera.isTraining) {
-                        EndEpisode();
-                    }
-                    else {
-                        nextCheckpoint = 0;
-                        SetReward(0);
-                    }
-                }
+            // 완주 체크포인트 도달 시
+            if (checkpointIndex == goalCheckpointIndex) {
+                AddReward(20f); // 완주 보상
+                EndEpisode();
             }
             else {
-                AddReward(-1f);
+                nextCheckpoint++; // 다음 체크포인트로 업데이트
             }
+        }
+        else {
+            AddReward(-1f); // 잘못된 체크포인트에 도달하면 페널티 부여
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Wall")) {
-            AddReward(-1f);
+        if (collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Animal")) {
+            // 태그에 따라 서로 다른 패널티를 부여
+            AddReward(collision.gameObject.CompareTag("Wall") ? -1f : -0.5f);
+            // Debug.Log($"Current Reward: {GetCumulativeReward()}");
+
+            // 누적 보상이 -30f 이하일 때 추가 패널티 부여 및 에피소드 종료
+            if (GetCumulativeReward() < -30f) {
+                AddReward(-10f);
+                if (IsTrainingOrHeuristicOnly) {
+                    EndEpisode();
+                }
+            }
+
             // OnEpisodeBegin();
             // EndEpisode();
-        }
-        else if (collision.gameObject.CompareTag("Animal")) {
-            AddReward(-0.05f);
         }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Wall")) {
-            AddReward(-0.1f);
+        if (collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Animal")) {
+            // 태그에 따라 서로 다른 패널티를 부여
+            AddReward(collision.gameObject.CompareTag("Wall") ? -0.1f : -0.05f);
 
-            if (GetCumulativeReward() < -20f) {
+            // 누적 보상이 -30f 이하일 때 추가 패널티 부여 및 에피소드 종료
+            if (GetCumulativeReward() < -30f) {
                 AddReward(-10f);
-                if (GameManager.Instance.mainCamera.isTraining) {
+                if (IsTrainingOrHeuristicOnly) {
                     EndEpisode();
                 }
             }
@@ -204,6 +237,9 @@ public class AnimalAgent : Agent
     {
         if (collision.gameObject.CompareTag("Wall")) {
             AddReward(0.5f);
+        }
+        else if (collision.gameObject.CompareTag("Animal")) {
+            AddReward(0.25f);
         }
     }
 }

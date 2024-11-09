@@ -28,14 +28,9 @@ public class MainCamera : MonoBehaviour
         foreach (AnimalAgent agent in FindObjectsByType<AnimalAgent>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)) {
             if (animals[agent.animalNumber] != null) continue;
             animals[agent.animalNumber] = agent;
+            targetTransform = agent.transform;
+            curAnimalIndex = agent.animalNumber;
         }
-    }
-
-    private void Start()
-    {
-        curAnimalIndex = 0;
-
-        targetTransform = animals[0].transform;
     }
 
     private void Update()
@@ -49,6 +44,9 @@ public class MainCamera : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.BackQuote)) {
             isObserver = !isObserver;
+            if (animals[curAnimalIndex].gameObject.GetComponent<BehaviorParameters>().BehaviorType == BehaviorType.HeuristicOnly) {
+                animals[curAnimalIndex].gameObject.GetComponent<BehaviorParameters>().BehaviorType = BehaviorType.InferenceOnly;
+            }
         }
 
         if (isObserver) {
