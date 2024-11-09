@@ -2,22 +2,40 @@
     "RaceToGoal": {
         "checkpoints": [
             {
-                "steps": 24656,
-                "file_path": "results\\RaceToGoal30\\RaceToGoal\\RaceToGoal-24656.onnx",
-                "reward": null,
-                "creation_time": 1731038471.442501,
+                "steps": 499971,
+                "file_path": "results\\RaceToGoal30\\RaceToGoal\\RaceToGoal-499971.onnx",
+                "reward": 190.72828817367554,
+                "creation_time": 1731090312.4758766,
                 "auxillary_file_paths": [
-                    "results\\RaceToGoal30\\RaceToGoal\\RaceToGoal-24656.pt"
+                    "results\\RaceToGoal30\\RaceToGoal\\RaceToGoal-499971.pt"
+                ]
+            },
+            {
+                "steps": 999983,
+                "file_path": "results\\RaceToGoal30\\RaceToGoal\\RaceToGoal-999983.onnx",
+                "reward": null,
+                "creation_time": 1731091404.1813684,
+                "auxillary_file_paths": [
+                    "results\\RaceToGoal30\\RaceToGoal\\RaceToGoal-999983.pt"
+                ]
+            },
+            {
+                "steps": 1000047,
+                "file_path": "results\\RaceToGoal30\\RaceToGoal\\RaceToGoal-1000047.onnx",
+                "reward": null,
+                "creation_time": 1731091404.2753003,
+                "auxillary_file_paths": [
+                    "results\\RaceToGoal30\\RaceToGoal\\RaceToGoal-1000047.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 24656,
+            "steps": 1000047,
             "file_path": "results\\RaceToGoal30\\RaceToGoal.onnx",
             "reward": null,
-            "creation_time": 1731038471.442501,
+            "creation_time": 1731091404.2753003,
             "auxillary_file_paths": [
-                "results\\RaceToGoal30\\RaceToGoal\\RaceToGoal-24656.pt"
+                "results\\RaceToGoal30\\RaceToGoal\\RaceToGoal-1000047.pt"
             ]
         }
     },

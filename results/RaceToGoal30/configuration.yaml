@@ -38,7 +38,7 @@ behaviors:
     init_path: results\RaceToGoal29\RaceToGoal\checkpoint.pt
     keep_checkpoints: 5
     even_checkpoints: false
-    max_steps: 500000
+    max_steps: 1000000
     time_horizon: 64
     summary_freq: 10000
     threaded: false
@@ -70,7 +70,7 @@ checkpoint_settings:
   initialize_from: RaceToGoal29
   load_model: false
   resume: false
-  force: false
+  force: true
   train_model: false
   inference: false
   results_dir: results

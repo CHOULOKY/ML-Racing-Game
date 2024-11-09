@@ -44,6 +44,9 @@ public class MainCamera : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.BackQuote)) {
             isObserver = !isObserver;
+            if (animals[curAnimalIndex].gameObject.GetComponent<BehaviorParameters>().BehaviorType == BehaviorType.HeuristicOnly) {
+                animals[curAnimalIndex].gameObject.GetComponent<BehaviorParameters>().BehaviorType = BehaviorType.InferenceOnly;
+            }
         }
 
         if (isObserver) {

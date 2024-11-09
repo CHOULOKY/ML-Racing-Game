@@ -77,5 +77,5 @@ venv/
 # Ignore other folders
 Build/
 Recordings/
-Assets/Imports
+# Assets/Imports
 # Assets/Prefabs

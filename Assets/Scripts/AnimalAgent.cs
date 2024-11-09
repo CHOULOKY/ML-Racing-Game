@@ -63,7 +63,7 @@ public class AnimalAgent : Agent
         rigid.velocity = Vector3.zero;
         rigid.angularVelocity = Vector3.zero;
 
-        if (IsTrainingOrHeuristicOnly) {
+        if (!IsTrainingOrHeuristicOnly) {
             // Use a completed model
             rigid.position = startPosition;
             rigid.rotation = startRotation;

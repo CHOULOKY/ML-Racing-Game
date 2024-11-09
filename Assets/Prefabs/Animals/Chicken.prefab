@@ -17,9 +17,9 @@ GameObject:
   - component: {fileID: -6043854803827657319}
   - component: {fileID: -5725166963289858577}
   - component: {fileID: 395730910838276947}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Chicken
-  m_TagString: Untagged
+  m_TagString: Test
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -140,9 +140,11 @@ MonoBehaviour:
   MaxStep: 0
   animalNumber: 3
   startTransforms: []
-  useModel: 1
+  startCheckpoint: {fileID: 0}
+  goalCheckpoint: {fileID: 0}
   moveSpeed: 20
   turnSpeed: 4
+  maxCheckpointTime: 0
 --- !u!114 &-2475938153424790604
 MonoBehaviour:
   m_ObjectHideFlags: 0
