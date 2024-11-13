@@ -1,0 +1,65 @@
+{
+    "RaceToGoal": {
+        "checkpoints": [
+            {
+                "steps": 3499990,
+                "file_path": "results\\RaceToGoal34\\RaceToGoal\\RaceToGoal-3499990.onnx",
+                "reward": 186.35679417848587,
+                "creation_time": 1731507716.9160779,
+                "auxillary_file_paths": [
+                    "results\\RaceToGoal34\\RaceToGoal\\RaceToGoal-3499990.pt"
+                ]
+            },
+            {
+                "steps": 3999978,
+                "file_path": "results\\RaceToGoal34\\RaceToGoal\\RaceToGoal-3999978.onnx",
+                "reward": null,
+                "creation_time": 1731508659.368302,
+                "auxillary_file_paths": [
+                    "results\\RaceToGoal34\\RaceToGoal\\RaceToGoal-3999978.pt"
+                ]
+            },
+            {
+                "steps": 4499961,
+                "file_path": "results\\RaceToGoal34\\RaceToGoal\\RaceToGoal-4499961.onnx",
+                "reward": 244.00401483476162,
+                "creation_time": 1731509587.4051154,
+                "auxillary_file_paths": [
+                    "results\\RaceToGoal34\\RaceToGoal\\RaceToGoal-4499961.pt"
+                ]
+            },
+            {
+                "steps": 4999971,
+                "file_path": "results\\RaceToGoal34\\RaceToGoal\\RaceToGoal-4999971.onnx",
+                "reward": null,
+                "creation_time": 1731510478.8931804,
+                "auxillary_file_paths": [
+                    "results\\RaceToGoal34\\RaceToGoal\\RaceToGoal-4999971.pt"
+                ]
+            },
+            {
+                "steps": 5000035,
+                "file_path": "results\\RaceToGoal34\\RaceToGoal\\RaceToGoal-5000035.onnx",
+                "reward": null,
+                "creation_time": 1731510478.9778285,
+                "auxillary_file_paths": [
+                    "results\\RaceToGoal34\\RaceToGoal\\RaceToGoal-5000035.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 5000035,
+            "file_path": "results\\RaceToGoal34\\RaceToGoal.onnx",
+            "reward": null,
+            "creation_time": 1731510478.9778285,
+            "auxillary_file_paths": [
+                "results\\RaceToGoal34\\RaceToGoal\\RaceToGoal-5000035.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.5.0+cpu"
+    }
+}
